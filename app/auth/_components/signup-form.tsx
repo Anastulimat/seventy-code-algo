@@ -39,7 +39,7 @@ export function SignupForm(
         startTransition(async () => {
             setError("");
 
-            const {data: result, error: tryCatchError} = await tryCatch(
+            const {data: result, error} = await tryCatch(
                 authClient.signUp.email({
                     email: data.email,
                     password: data.password,
@@ -54,9 +54,9 @@ export function SignupForm(
                 })
             );
 
-            if (tryCatchError) {
+            if (error) {
                 setError("An unexpected error occurred");
-                console.error(tryCatchError);
+                console.error(error);
                 return;
             }
 

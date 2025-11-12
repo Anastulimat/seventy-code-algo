@@ -12,6 +12,7 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import {useRouter} from "next/navigation";
 import {signupSchema, SignupSchemaType} from "@/schema/signupSchema";
 import {authClient} from "@/lib/auth-client";
+import {toast} from "sonner";
 
 // ----------------------------------------------------------------------
 
@@ -19,7 +20,8 @@ export function SignupForm(
     {
         className,
         ...props
-    }: ComponentProps<"div">) {
+    }
+    : ComponentProps<"div">) {
     const router = useRouter();
     const [error, setError] = useState<string>("");
     const [isPending, startTransition] = useTransition();
@@ -41,15 +43,19 @@ export function SignupForm(
                     email: data.email,
                     password: data.password,
                     username: data.username,
-                    name: data.username
+                    name: data.username,
+                    fetchOptions: {
+                        onSuccess: async () => {
+                            toast.success("Sign up successfully");
+                            router.push("/");
+                        }
+                    }
                 });
 
                 if (result.error) {
                     setError(result.error.message || "An error occurred during signup");
                     return;
                 }
-
-                router.push("/");
             } catch (err) {
                 setError("An unexpected error occurred");
                 console.error(err);

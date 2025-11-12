@@ -13,6 +13,7 @@ import {useRouter} from "next/navigation";
 import {signupSchema, SignupSchemaType} from "@/schema/signupSchema";
 import {authClient} from "@/lib/auth-client";
 import {toast} from "sonner";
+import {tryCatch} from "@/lib/try-catch";
 
 // ----------------------------------------------------------------------
 
@@ -36,10 +37,10 @@ export function SignupForm(
 
     const onSubmit = (data: SignupSchemaType) => {
         startTransition(async () => {
-            try {
-                setError("");
+            setError("");
 
-                const result = await authClient.signUp.email({
+            const {data: result, error: tryCatchError} = await tryCatch(
+                authClient.signUp.email({
                     email: data.email,
                     password: data.password,
                     username: data.username,
@@ -50,15 +51,18 @@ export function SignupForm(
                             router.push("/");
                         }
                     }
-                });
+                })
+            );
 
-                if (result.error) {
-                    setError(result.error.message || "An error occurred during signup");
-                    return;
-                }
-            } catch (err) {
+            if (tryCatchError) {
                 setError("An unexpected error occurred");
-                console.error(err);
+                console.error(tryCatchError);
+                return;
+            }
+
+            if (result?.error) {
+                setError(result.error.message || "An error occurred during signup");
+                return;
             }
         });
     };

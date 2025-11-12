@@ -34,8 +34,8 @@ model User {
   displayUsername String?
 
   @@unique([email])
-  @@map("user")
   @@unique([username])
+  @@map("user")
 }
 
 model Session {

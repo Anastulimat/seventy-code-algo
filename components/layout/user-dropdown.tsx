@@ -59,7 +59,7 @@ export function UserDropdown({name, email, image}: iAppProps) {
 
                 <DropdownMenuGroup>
                     <DropdownMenuItem asChild>
-                        <Link href="/">
+                        <Link href="/public">
                             <HomeIcon size={16} className="opacity-60" aria-hidden="true"/>
                             <span>Home</span>
                         </Link>

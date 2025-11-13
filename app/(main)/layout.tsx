@@ -1,5 +1,5 @@
 import {ReactNode} from "react";
-import {Navbar} from "@/app/(public)/_components/Navbar";
+import {Navbar} from "@/components/layout/navbar";
 
 // ----------------------------------------------------------------------
 

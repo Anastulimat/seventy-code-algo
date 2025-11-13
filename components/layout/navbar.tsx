@@ -4,7 +4,7 @@ import Link from "next/link";
 import {ThemeToggle} from "@/components/ui/theme-toggle";
 import {authClient} from "@/lib/auth-client";
 import {buttonVariants} from "@/components/ui/button";
-import {UserDropdown} from "@/app/(public)/_components/UserDropdown";
+import {UserDropdown} from "@/components/layout/user-dropdown";
 
 // ----------------------------------------------------------------------
 

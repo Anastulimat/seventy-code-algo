@@ -33,6 +33,12 @@ model User {
   username        String?
   displayUsername String?
 
+  submissions    Submission[]
+  solvedProblems UserProblem[]
+
+  // Statistiques dénormalisées pour performance
+  stats UserStats?
+
   @@unique([email])
   @@unique([username])
   @@map("user")
@@ -83,4 +89,240 @@ model Verification {
   updatedAt  DateTime @default(now()) @updatedAt
 
   @@map("verification")
+}
+
+// ----------------------------------------------------------------------
+
+model Problem {
+  id          String     @id @default(uuid())
+  title       String
+  slug        String     @unique
+  description String     @db.Text
+  difficulty  Difficulty
+  order       Int        @default(autoincrement())
+
+  // Contraintes et exemples
+  constraints String?   @db.Text
+  examples    Example[]
+
+  // Métadonnées
+  acceptance       Float @default(0) // Taux d'acceptation en %
+  totalSubmissions Int   @default(0)
+  totalAccepted    Int   @default(0)
+
+  isPremium Boolean @default(false)
+  isActive  Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  tags         ProblemTag[]
+  testCases    TestCase[]
+  submissions  Submission[]
+  userProblems UserProblem[]
+  solutions    Solution[]
+
+  @@index([difficulty])
+  @@index([slug])
+  @@index([order])
+  @@map("problem")
+}
+
+model Example {
+  id          String  @id @default(cuid())
+  problemId   String
+  input       String  @db.Text
+  output      String  @db.Text
+  explanation String? @db.Text
+  order       Int
+
+  problem Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
+
+  @@index([problemId])
+  @@map("example")
+}
+
+model TestCase {
+  id             String  @id @default(cuid())
+  problemId      String
+  input          String  @db.Text
+  expectedOutput String  @db.Text
+  isHidden       Boolean @default(false) // Tests cachés non visibles par l'utilisateur
+  order          Int
+
+  problem Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
+
+  @@index([problemId])
+  @@map("test_case")
+}
+
+model Tag {
+  id   String @id @default(cuid())
+  name String @unique
+  slug String @unique
+
+  problems ProblemTag[]
+
+  @@index([slug])
+  @@map("tag")
+}
+
+model ProblemTag {
+  problemId String
+  tagId     String
+
+  problem Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
+  tag     Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([problemId, tagId])
+  @@index([problemId])
+  @@index([tagId])
+  @@map("problem_tag")
+}
+
+model Submission {
+  id        String @id @default(cuid())
+  userId    String
+  problemId String
+
+  code     String           @db.Text
+  language Language
+  status   SubmissionStatus
+
+  // Résultats
+  runtime      Int? // en ms
+  memory       Int? // en KB
+  testsPassed  Int     @default(0)
+  testsTotal   Int     @default(0)
+  errorMessage String? @db.Text
+
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  problem Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([problemId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("submission")
+}
+
+model UserProblem {
+  id        String            @id @default(cuid())
+  userId    String
+  problemId String
+  status    UserProblemStatus
+
+  attempts    Int       @default(0)
+  solvedAt    DateTime?
+  lastAttempt DateTime  @default(now())
+
+  isFavorite Boolean @default(false)
+  notes      String? @db.Text
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  problem Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, problemId])
+  @@index([userId])
+  @@index([problemId])
+  @@index([status])
+  @@map("user_problem")
+}
+
+model Solution {
+  id          String   @id @default(cuid())
+  problemId   String
+  title       String
+  description String   @db.Text
+  code        String   @db.Text
+  language    Language
+
+  upvotes   Int @default(0)
+  downvotes Int @default(0)
+
+  isOfficial Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  problem Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
+
+  @@index([problemId])
+  @@index([isOfficial])
+  @@map("solution")
+}
+
+model UserStats {
+  id     String @id @default(cuid())
+  userId String @unique
+
+  // Problèmes résolus par difficulté
+  easySolved   Int @default(0)
+  mediumSolved Int @default(0)
+  hardSolved   Int @default(0)
+  totalSolved  Int @default(0)
+
+  // Tentatives totales
+  totalSubmissions    Int @default(0)
+  acceptedSubmissions Int @default(0)
+
+  // Streak
+  currentStreak Int       @default(0)
+  maxStreak     Int       @default(0)
+  lastSolvedAt  DateTime?
+
+  // Rang
+  ranking Int?
+
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([ranking])
+  @@map("user_stats")
+}
+
+// ============================================
+// ENUMS
+// ============================================
+
+enum Difficulty {
+  Easy
+  Medium
+  Hard
+}
+
+enum Language {
+  JAVASCRIPT
+  TYPESCRIPT
+  PYTHON
+  JAVA
+  CPP
+  C
+  CSHARP
+  GO
+  RUST
+  PHP
+  SWIFT
+  KOTLIN
+  RUBY
+}
+
+enum SubmissionStatus {
+  ACCEPTED
+  WRONG_ANSWER
+  TIME_LIMIT_EXCEEDED
+  MEMORY_LIMIT_EXCEEDED
+  RUNTIME_ERROR
+  COMPILATION_ERROR
+  PENDING
+}
+
+enum UserProblemStatus {
+  NOT_STARTED
+  ATTEMPTED
+  SOLVED
 }

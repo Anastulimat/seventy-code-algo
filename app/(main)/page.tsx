@@ -61,7 +61,7 @@ export default function Home() {
                             className={buttonVariants({
                                 size: "lg",
                             })}
-                            href="/problemset"
+                            href="/problems"
                         >
                             Start practicing
                         </Link>

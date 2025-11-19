@@ -90,7 +90,7 @@ export function ProblemDescription({problem}: ProblemDescriptionProps) {
                     <Separator/>
                     <div>
                         <h2 className="text-lg font-semibold mb-3">Contraintes</h2>
-                        <div
+                        <code
                             className="prose prose-slate dark:prose-invert max-w-none text-sm"
                             dangerouslySetInnerHTML={{__html: formatConstraints(problem.constraints)}}
                         />

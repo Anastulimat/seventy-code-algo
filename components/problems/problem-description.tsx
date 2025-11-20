@@ -1,10 +1,10 @@
 "use client";
 
 import {Badge} from "@/components/ui/badge";
-import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
+import {Card} from "@/components/ui/card";
 import {Separator} from "@/components/ui/separator";
 import type {ProblemFull} from "@/types";
-import {DIFFICULTY_BG_COLORS} from "@/types";
+import {capitalize, getDifficultyColor} from "@/lib/utils";
 
 interface ProblemDescriptionProps {
     problem: ProblemFull;
@@ -12,15 +12,15 @@ interface ProblemDescriptionProps {
 
 export function ProblemDescription({problem}: ProblemDescriptionProps) {
     return (
-        <div className="space-y-6">
+        <Card className="px-4 py-4 m-2 bg-muted/50 rounded-lg shadow-md border border-muted-foreground/10 h-full overflow-y-auto">
             {/* En-tête */}
             <div>
                 <div className="flex items-center gap-3 mb-3">
-                    <h1 className="text-2xl font-bold">
+                    <h1 className="text-lg font-bold">
                         {problem.order}. {problem.title}
                     </h1>
-                    <Badge className={DIFFICULTY_BG_COLORS[problem.difficulty]}>
-                        {getDifficultyLabel(problem.difficulty)}
+                    <Badge className={getDifficultyColor(problem.difficulty)}>
+                        {capitalize(problem.difficulty)}
                     </Badge>
                 </div>
                 <div className="flex flex-wrap gap-2">
@@ -31,8 +31,6 @@ export function ProblemDescription({problem}: ProblemDescriptionProps) {
                     ))}
                 </div>
             </div>
-
-            <Separator/>
 
             {/* Description */}
             <div>
@@ -48,36 +46,35 @@ export function ProblemDescription({problem}: ProblemDescriptionProps) {
                 <>
                     <Separator/>
                     <div>
-                        <h2 className="text-lg font-semibold mb-3">Exemples</h2>
-                        <div className="space-y-4">
+                        <div className="space-y-6">
                             {problem.examples.map((example, index) => (
-                                <Card key={example.id}>
-                                    <CardHeader>
-                                        <CardTitle className="text-sm">Exemple {index + 1}</CardTitle>
-                                    </CardHeader>
-                                    <CardContent className="space-y-2">
-                                        <div>
-                                            <span className="font-semibold">Entrée : </span>
-                                            <code className="bg-muted px-2 py-1 rounded text-sm">
-                                                {example.input}
-                                            </code>
-                                        </div>
-                                        <div>
-                                            <span className="font-semibold">Sortie : </span>
-                                            <code className="bg-muted px-2 py-1 rounded text-sm">
-                                                {example.output}
-                                            </code>
-                                        </div>
-                                        {example.explanation && (
+                                <div key={index}>
+                                    <div className="text-sm font-semibold">Exemple {index + 1}</div>
+                                    <pre className="border-l-2 border-border pl-4 mt-2" key={example.id}>
+                                        <div className="space-y-2">
                                             <div>
-                                                <span className="font-semibold">Explication : </span>
-                                                <span className="text-muted-foreground">
-                          {example.explanation}
-                        </span>
+                                                <span className="font-semibold">Entrée : </span>
+                                                <code className="bg-muted px-2 py-1 rounded text-sm">
+                                                    {example.input}
+                                                </code>
                                             </div>
-                                        )}
-                                    </CardContent>
-                                </Card>
+                                            <div>
+                                                <span className="font-semibold">Sortie : </span>
+                                                <code className="bg-muted px-2 py-1 rounded text-sm">
+                                                    {example.output}
+                                                </code>
+                                            </div>
+                                            {example.explanation && (
+                                                <div>
+                                                    <span className="font-semibold">Explication : </span>
+                                                    <span className="text-muted-foreground">
+                                                      {example.explanation}
+                                                    </span>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </pre>
+                                </div>
                             ))}
                         </div>
                     </div>
@@ -97,22 +94,10 @@ export function ProblemDescription({problem}: ProblemDescriptionProps) {
                     </div>
                 </>
             )}
-        </div>
+        </Card>
     );
 }
 
-function getDifficultyLabel(difficulty: string): string {
-    switch (difficulty) {
-        case "EASY":
-            return "Facile";
-        case "MEDIUM":
-            return "Moyen";
-        case "HARD":
-            return "Difficile";
-        default:
-            return difficulty;
-    }
-}
 
 function formatDescription(description: string): string {
     // Convertir les backticks en <code>

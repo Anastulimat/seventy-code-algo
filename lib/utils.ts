@@ -25,7 +25,7 @@ export function getDifficultyColor(difficulty: Difficulty): string {
     difficulty = capitalize(difficulty) as Difficulty;
     switch (difficulty) {
         case 'Easy':
-            return 'text-green-600 bg-green-600/10';
+            return 'text-green-500 bg-green-500/10';
         case 'Medium':
             return 'text-yellow-600 bg-yellow-600/10';
         case 'Hard':

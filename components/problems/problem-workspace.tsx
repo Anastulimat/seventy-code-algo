@@ -28,7 +28,6 @@ interface TestResult {
 
 export function ProblemWorkspace({problem}: ProblemWorkspaceProps) {
 
-    const [loading, setLoading] = useState(true);
     const [isRunning, setIsRunning] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [testResults, setTestResults] = useState<TestResult[]>([]);
@@ -108,7 +107,7 @@ export function ProblemWorkspace({problem}: ProblemWorkspaceProps) {
 
     return (
         <Split
-            className="split flex-1 flex"
+            className="split flex-1 flex h-full"
             sizes={[50, 50]}
             minSize={300}
             expandToMin={false}
@@ -119,17 +118,17 @@ export function ProblemWorkspace({problem}: ProblemWorkspaceProps) {
             direction="horizontal"
             cursor="col-resize"
         >
-            {/* Panneau gauche - Description */}
-            <div className="overflow-y-auto">
+            {/* Panneau gauche - Description avec scroll */}
+            <div>
                 <ProblemDescription problem={problem}/>
             </div>
 
             {/* Panneau droit - Éditeur + Console */}
-            <div className="flex flex-col">
+            <div className="flex flex-col h-full">
                 {/* Split vertical pour éditeur et console */}
                 <Split
-                    className="split flex flex-col flex-1"
-                    sizes={[60, 40]}
+                    className="split flex flex-col flex-1 h-full"
+                    sizes={[65, 35]}
                     minSize={100}
                     expandToMin={false}
                     gutterSize={10}
@@ -140,7 +139,7 @@ export function ProblemWorkspace({problem}: ProblemWorkspaceProps) {
                     cursor="row-resize"
                 >
                     {/* Éditeur */}
-                    <div className="overflow-hidden">
+                    <div className="overflow-hidden h-full">
                         <CodeEditor
                             onRun={handleRun}
                             onSubmit={handleSubmit}
@@ -150,7 +149,7 @@ export function ProblemWorkspace({problem}: ProblemWorkspaceProps) {
                     </div>
 
                     {/* Console */}
-                    <div className="overflow-y-auto bg-dark-layer-1">
+                    <div className="overflow-y-auto bg-dark-layer-1 h-full">
                         <TestConsole
                             results={testResults}
                             status={submissionResult?.status}
@@ -163,4 +162,5 @@ export function ProblemWorkspace({problem}: ProblemWorkspaceProps) {
             </div>
         </Split>
     );
+
 }

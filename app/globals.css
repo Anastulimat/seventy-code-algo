@@ -190,7 +190,7 @@
 }
 
 .gutter:hover {
-    background-color: hsl(var(--accent));
+    background-color: var(--accent) !important;
 }
 
 .gutter.gutter-horizontal {

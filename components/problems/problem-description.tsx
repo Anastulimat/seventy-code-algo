@@ -12,7 +12,7 @@ interface ProblemDescriptionProps {
 
 export function ProblemDescription({problem}: ProblemDescriptionProps) {
     return (
-        <Card className="px-4 py-4 m-2 bg-muted/50 rounded-lg shadow-md border border-muted-foreground/10 h-full overflow-y-auto">
+        <Card className="px-4 py-4 my-2 bg-muted/50 rounded-lg shadow-md border border-muted-foreground/10 h-full overflow-y-auto">
             {/* En-tête */}
             <div>
                 <div className="flex items-center gap-3 mb-3">

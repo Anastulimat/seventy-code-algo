@@ -74,15 +74,12 @@ export function ProblemWorkspace({problem}: ProblemWorkspaceProps) {
     const handleSubmit = async (code: string, language: Language) => {
         if (!problem) return;
 
-        // TODO: Récupérer l'userId de la session
-        const userId = "temp-user-id"; // À remplacer par la vraie session
-
         setIsSubmitting(true);
         setTestResults([]);
         setSubmissionResult(null);
 
         try {
-            const result = await submitCode(problem.id, code, language, userId);
+            const result = await submitCode(problem.id, code, language);
 
             if (result.success && result.data) {
                 setSubmissionResult(result.data);
@@ -108,7 +105,7 @@ export function ProblemWorkspace({problem}: ProblemWorkspaceProps) {
     return (
         <Split
             className="split flex-1 flex h-full"
-            sizes={[50, 50]}
+            sizes={[45, 65]}
             minSize={300}
             expandToMin={false}
             gutterSize={10}

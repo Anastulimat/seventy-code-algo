@@ -44,7 +44,7 @@ export function TestConsole({
     }
 
     return (
-        <Card className="h-full">
+        <Card className="bg-muted/50 rounded-lg shadow-md border border-muted-foreground/10 h-full overflow-y-auto">
             <CardHeader>
                 <div className="flex items-center justify-between">
                     <CardTitle className="text-sm">Résultats</CardTitle>

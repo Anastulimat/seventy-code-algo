@@ -172,7 +172,7 @@ export function CodeEditor({
     };
 
     return (
-        <Card className="p-0 my-2 bg-muted/50 rounded-lg shadow-md border border-muted-foreground/10 h-full flex flex-col z-10">
+        <Card className="p-0 my-2 bg-muted/50 rounded-lg shadow-md border border-muted-foreground/10 h-full flex flex-col">
             {/* Barre d'outils */}
             <div className="flex items-center justify-between p-2 border-b">
                 {/* Gauche - Sélecteurs */}

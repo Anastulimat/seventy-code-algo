@@ -175,8 +175,6 @@
 }
 
 
-/* globals.css */
-/* globals.css */
 
 .split {
     @apply flex;
@@ -201,4 +199,22 @@
 .gutter.gutter-vertical {
     @apply cursor-row-resize;
     background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII=');
+}
+
+/* Cibler spécifiquement le conteneur Monaco */
+.monaco-editor {
+    padding: 0 !important;
+}
+
+.monaco-editor .overflow-guard {
+    border-radius: 0 !important;
+}
+
+.monaco-editor .monaco-scrollable-element {
+    border-radius: 0 0 0.5rem 0.5rem !important;
+}
+
+/* Enlever tous les espaces */
+.monaco-editor .lines-content {
+    padding-top: 0 !important;
 }

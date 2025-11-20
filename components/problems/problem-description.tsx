@@ -15,7 +15,7 @@ export function ProblemDescription({problem}: ProblemDescriptionProps) {
         <Card className="px-4 py-4 my-2 bg-muted/50 rounded-lg shadow-md border border-muted-foreground/10 h-full overflow-y-auto">
             {/* En-tête */}
             <div>
-                <div className="flex items-center gap-3 mb-3">
+                <div className="flex items-center gap-3 mb-2">
                     <h1 className="text-lg font-bold">
                         {problem.order}. {problem.title}
                     </h1>
@@ -34,9 +34,9 @@ export function ProblemDescription({problem}: ProblemDescriptionProps) {
 
             {/* Description */}
             <div>
-                <h2 className="text-lg font-semibold mb-3">Description</h2>
+                <h2 className="text-lg font-semibold mb-2">Description</h2>
                 <div
-                    className="prose prose-slate dark:prose-invert max-w-none"
+                    className="prose prose-slate dark:prose-invert max-w-none text-sm leading-relaxed"
                     dangerouslySetInnerHTML={{__html: formatDescription(problem.description)}}
                 />
             </div>
@@ -50,7 +50,7 @@ export function ProblemDescription({problem}: ProblemDescriptionProps) {
                             {problem.examples.map((example, index) => (
                                 <div key={index}>
                                     <div className="text-sm font-semibold">Exemple {index + 1}</div>
-                                    <pre className="border-l-2 border-border pl-4 mt-2" key={example.id}>
+                                    <pre className="border-l-2 border-border pl-4 mt-2 max-w-none" key={example.id}>
                                         <div className="space-y-2">
                                             <div>
                                                 <span className="font-semibold">Entrée : </span>
@@ -86,7 +86,7 @@ export function ProblemDescription({problem}: ProblemDescriptionProps) {
                 <>
                     <Separator/>
                     <div>
-                        <h2 className="text-lg font-semibold mb-3">Contraintes</h2>
+                        <h2 className="text-lg font-semibold mb-2">Contraintes</h2>
                         <code
                             className="prose prose-slate dark:prose-invert max-w-none text-sm"
                             dangerouslySetInnerHTML={{__html: formatConstraints(problem.constraints)}}

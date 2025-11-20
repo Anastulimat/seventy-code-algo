@@ -1,12 +1,13 @@
 "use client";
 
-import {useState, useEffect} from "react";
+import {useEffect, useState} from "react";
 import Editor, {loader} from "@monaco-editor/react";
-import {useTheme} from "next-themes";
 import {Button} from "@/components/ui/button";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from "@/components/ui/select";
-import {Play, RotateCcw, Send, Palette} from "lucide-react";
+import {Palette, Play, RotateCcw, Send} from "lucide-react";
 import {Language} from "@/lib/generated/prisma/enums";
+import {editor} from "monaco-editor";
+import {Card} from "@/components/ui/card";
 
 interface CodeEditorProps {
     initialCode?: string;
@@ -16,6 +17,8 @@ interface CodeEditorProps {
     isRunning?: boolean;
     isSubmitting?: boolean;
 }
+
+type ThemeData = editor.IStandaloneThemeData;
 
 const LANGUAGE_MAP: Record<Language, string> = {
     JAVASCRIPT: "javascript",
@@ -33,18 +36,17 @@ const LANGUAGE_MAP: Record<Language, string> = {
     RUBY: "ruby",
 };
 
-// 10 Thèmes pour Monaco Editor
 const EDITOR_THEMES = [
-    { value: "vs-dark", label: "VS Dark", icon: "🌙" },
-    { value: "light", label: "Light", icon: "☀️" },
-    { value: "hc-black", label: "High Contrast Dark", icon: "⚫" },
-    { value: "monokai", label: "Monokai", icon: "🎨" },
-    { value: "github", label: "GitHub", icon: "🐙" },
-    { value: "dracula", label: "Dracula", icon: "🧛" },
-    { value: "nord", label: "Nord", icon: "❄️" },
-    { value: "solarized-dark", label: "Solarized Dark", icon: "🌅" },
-    { value: "cobalt", label: "Cobalt", icon: "💎" },
-    { value: "night-owl", label: "Night Owl", icon: "🦉" },
+    {value: "vs-dark", label: "VS Dark", icon: "🌙"},
+    {value: "light", label: "Light", icon: "☀️"},
+    {value: "hc-black", label: "High Contrast Dark", icon: "⚫"},
+    {value: "monokai", label: "Monokai", icon: "🎨"},
+    {value: "github", label: "GitHub", icon: "🐙"},
+    {value: "dracula", label: "Dracula", icon: "🧛"},
+    {value: "nord", label: "Nord", icon: "❄️"},
+    {value: "solarized-dark", label: "Solarized Dark", icon: "🌅"},
+    {value: "cobalt", label: "Cobalt", icon: "💎"},
+    {value: "night-owl", label: "Night Owl", icon: "🦉"},
 ] as const;
 
 type EditorTheme = typeof EDITOR_THEMES[number]["value"];
@@ -116,7 +118,6 @@ export function CodeEditor({
                                isRunning = false,
                                isSubmitting = false,
                            }: CodeEditorProps) {
-    const {theme: systemTheme} = useTheme();
     const [code, setCode] = useState(initialCode || DEFAULT_CODE_TEMPLATES[initialLanguage]);
     const [language, setLanguage] = useState(initialLanguage);
     const [editorTheme, setEditorTheme] = useState<EditorTheme>("vs-dark");
@@ -127,24 +128,22 @@ export function CodeEditor({
         const loadThemes = async () => {
             const monaco = await loader.init();
 
-            // Importer les thèmes depuis monaco-themes
-            const themes = await import('monaco-themes/themes/themelist.json');
-
             // Définir les thèmes personnalisés
-            const themeImports: Record<string, () => Promise<any>> = {
-                'monokai': () => import('monaco-themes/themes/Monokai.json'),
-                'github': () => import('monaco-themes/themes/GitHub.json'),
-                'dracula': () => import('monaco-themes/themes/Dracula.json'),
-                'nord': () => import('monaco-themes/themes/Nord.json'),
+            const themeImports: Record<string, () => Promise<Record<string, unknown>>> = {
+                monokai: () => import('monaco-themes/themes/Monokai.json'),
+                github: () => import('monaco-themes/themes/GitHub.json'),
+                dracula: () => import('monaco-themes/themes/Dracula.json'),
+                nord: () => import('monaco-themes/themes/Nord.json'),
                 'solarized-dark': () => import('monaco-themes/themes/Solarized-dark.json'),
-                'cobalt': () => import('monaco-themes/themes/Cobalt.json'),
+                cobalt: () => import('monaco-themes/themes/Cobalt.json'),
                 'night-owl': () => import('monaco-themes/themes/Night Owl.json'),
             };
+
 
             for (const [name, importFn] of Object.entries(themeImports)) {
                 try {
                     const themeData = await importFn();
-                    monaco.editor.defineTheme(name, themeData.default || themeData);
+                    monaco.editor.defineTheme(name, themeData.default as ThemeData);
                 } catch (error) {
                     console.warn(`Failed to load theme ${name}:`, error);
                 }
@@ -173,9 +172,9 @@ export function CodeEditor({
     };
 
     return (
-        <div className="flex flex-col h-full">
+        <Card className="p-0 my-2 bg-muted/50 rounded-lg shadow-md border border-muted-foreground/10 h-full flex flex-col z-10">
             {/* Barre d'outils */}
-            <div className="flex items-center justify-between gap-2 p-2 border-b bg-muted/30">
+            <div className="flex items-center justify-between p-2 border-b">
                 {/* Gauche - Sélecteurs */}
                 <div className="flex items-center gap-2">
                     {/* Sélecteur de langage */}
@@ -200,8 +199,8 @@ export function CodeEditor({
                     <Select value={editorTheme} onValueChange={handleThemeChange}>
                         <SelectTrigger className="w-[180px]">
                             <div className="flex items-center gap-2 overflow-hidden">
-                                <Palette className="h-4 w-4 flex-shrink-0" />
-                                <SelectValue className="truncate" />
+                                <Palette className="h-4 w-4 flex-shrink-0"/>
+                                <SelectValue className="truncate"/>
                             </div>
                         </SelectTrigger>
                         <SelectContent>
@@ -252,7 +251,7 @@ export function CodeEditor({
             </div>
 
             {/* Éditeur */}
-            <div className="flex-1">
+            <div className="flex-1 rounded-b-lg overflow-hidden -mt-6">
                 {isEditorReady ? (
                     <Editor
                         height="100%"
@@ -272,15 +271,15 @@ export function CodeEditor({
                             fontLigatures: true,
                             cursorBlinking: "smooth",
                             smoothScrolling: true,
-                            padding: { top: 16, bottom: 16 },
+                            padding: {top: 16, bottom: 16},
                         }}
                     />
                 ) : (
-                    <div className="flex items-center justify-center h-full">
-                        <p className="text-muted-foreground">Chargement de l'éditeur...</p>
+                    <div className="flex items-center justify-center h-full w-full">
+                        <p className="text-muted-foreground">Chargement de l&apos;éditeur...</p>
                     </div>
                 )}
             </div>
-        </div>
+        </Card>
     );
 }

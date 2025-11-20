@@ -139,7 +139,7 @@ export function ProblemWorkspace({problem}: ProblemWorkspaceProps) {
                     cursor="row-resize"
                 >
                     {/* Éditeur */}
-                    <div className="overflow-hidden h-full">
+                    <div className="overflow-hidden">
                         <CodeEditor
                             onRun={handleRun}
                             onSubmit={handleSubmit}

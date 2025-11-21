@@ -12,88 +12,90 @@ interface ProblemDescriptionProps {
 
 export function ProblemDescription({problem}: ProblemDescriptionProps) {
     return (
-        <Card className="px-4 py-4 my-2 bg-muted/50 rounded-lg shadow-md border border-muted-foreground/10 h-full overflow-y-auto">
-            {/* En-tête */}
-            <div>
-                <div className="flex items-center gap-3 mb-2">
-                    <h1 className="text-lg font-bold">
-                        {problem.order}. {problem.title}
-                    </h1>
-                    <Badge className={getDifficultyColor(problem.difficulty)}>
-                        {capitalize(problem.difficulty)}
-                    </Badge>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                    {problem.tags.map(({tag}) => (
-                        <Badge key={tag.id} variant="secondary">
-                            {tag.name}
+        <Card className="py-4 h-full flex flex-col bg-muted/50 rounded-lg shadow-md border border-muted-foreground/10">
+            <div className="px-4 overflow-y-auto flex-1">
+                {/* En-tête */}
+                <div className="mb-4">
+                    <div className="flex items-center gap-3 mb-2">
+                        <h1 className="text-lg font-bold">
+                            {problem.order}. {problem.title}
+                        </h1>
+                        <Badge className={getDifficultyColor(problem.difficulty)}>
+                            {capitalize(problem.difficulty)}
                         </Badge>
-                    ))}
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                        {problem.tags.map(({tag}) => (
+                            <Badge key={tag.id} variant="secondary">
+                                {tag.name}
+                            </Badge>
+                        ))}
+                    </div>
                 </div>
-            </div>
 
-            {/* Description */}
-            <div>
-                <h2 className="text-lg font-semibold mb-2">Description</h2>
-                <div
-                    className="prose prose-slate dark:prose-invert max-w-none text-sm leading-relaxed"
-                    dangerouslySetInnerHTML={{__html: formatDescription(problem.description)}}
-                />
-            </div>
+                {/* Description */}
+                <div className="mb-4">
+                    <h2 className="text-lg font-semibold mb-2">Description</h2>
+                    <div
+                        className="prose prose-slate dark:prose-invert max-w-none text-sm leading-relaxed"
+                        dangerouslySetInnerHTML={{__html: formatDescription(problem.description)}}
+                    />
+                </div>
 
-            {/* Exemples */}
-            {problem.examples.length > 0 && (
-                <>
-                    <Separator/>
-                    <div>
-                        <div className="space-y-6">
-                            {problem.examples.map((example, index) => (
-                                <div key={index}>
-                                    <div className="text-sm font-semibold">Exemple {index + 1}</div>
-                                    <pre className="border-l-2 border-border pl-4 mt-2 max-w-none" key={example.id}>
-                                        <div className="space-y-2">
-                                            <div>
-                                                <span className="font-semibold">Entrée : </span>
-                                                <code className="bg-muted px-2 py-1 rounded text-sm">
-                                                    {example.input}
-                                                </code>
-                                            </div>
-                                            <div>
-                                                <span className="font-semibold">Sortie : </span>
-                                                <code className="bg-muted px-2 py-1 rounded text-sm">
-                                                    {example.output}
-                                                </code>
-                                            </div>
-                                            {example.explanation && (
+                {/* Exemples */}
+                {problem.examples.length > 0 && (
+                    <>
+                        <Separator className="my-4"/>
+                        <div className="mb-4">
+                            <div className="space-y-6">
+                                {problem.examples.map((example, index) => (
+                                    <div key={index}>
+                                        <div className="text-sm font-semibold">Exemple {index + 1}</div>
+                                        <pre className="border-l-2 border-border pl-4 mt-2 max-w-none" key={example.id}>
+                                            <div className="space-y-2">
                                                 <div>
-                                                    <span className="font-semibold">Explication : </span>
-                                                    <span className="text-muted-foreground">
-                                                      {example.explanation}
-                                                    </span>
+                                                    <span className="font-semibold">Entrée : </span>
+                                                    <code className="bg-muted px-2 py-1 rounded text-sm">
+                                                        {example.input}
+                                                    </code>
                                                 </div>
-                                            )}
-                                        </div>
-                                    </pre>
-                                </div>
-                            ))}
+                                                <div>
+                                                    <span className="font-semibold">Sortie : </span>
+                                                    <code className="bg-muted px-2 py-1 rounded text-sm">
+                                                        {example.output}
+                                                    </code>
+                                                </div>
+                                                {example.explanation && (
+                                                    <div>
+                                                        <span className="font-semibold">Explication : </span>
+                                                        <span className="text-muted-foreground">
+                                                          {example.explanation}
+                                                        </span>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </pre>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
-                    </div>
-                </>
-            )}
+                    </>
+                )}
 
-            {/* Contraintes */}
-            {problem.constraints && (
-                <>
-                    <Separator/>
-                    <div>
-                        <h2 className="text-lg font-semibold mb-2">Contraintes</h2>
-                        <code
-                            className="prose prose-slate dark:prose-invert max-w-none text-sm"
-                            dangerouslySetInnerHTML={{__html: formatConstraints(problem.constraints)}}
-                        />
-                    </div>
-                </>
-            )}
+                {/* Contraintes */}
+                {problem.constraints && (
+                    <>
+                        <Separator className="my-4"/>
+                        <div>
+                            <h2 className="text-lg font-semibold mb-2">Contraintes</h2>
+                            <code
+                                className="prose prose-slate dark:prose-invert max-w-none text-sm"
+                                dangerouslySetInnerHTML={{__html: formatConstraints(problem.constraints)}}
+                            />
+                        </div>
+                    </>
+                )}
+            </div>
         </Card>
     );
 }

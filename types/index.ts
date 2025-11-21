@@ -393,6 +393,85 @@ export const LANGUAGE_EXTENSIONS: LanguageExtension = {
     RUBY: "rb",
 };
 
+// lib/piston/types.ts
+export interface PistonExecuteOptions {
+    language: string;
+    version: string;
+    files: Array<{
+        name?: string;
+        content: string;
+    }>;
+    stdin?: string;
+    args?: string[];
+    compile_timeout?: number;
+    run_timeout?: number;
+}
+
+export interface PistonExecuteResult {
+    language: string;
+    version: string;
+    run: {
+        stdout: string;
+        stderr: string;
+        output: string;
+        code: number;
+        signal: string | null;
+    };
+    compile?: {
+        stdout: string;
+        stderr: string;
+        output: string;
+        code: number;
+    };
+}
+
+export interface CodeExecutionResult {
+    success: boolean;
+    output?: string;
+    stderr?: string;
+    stdout?: string;
+    exitCode?: number;
+    error?: string;
+    executionTime?: number;
+}
+
+export interface ExecuteOptions {
+    language: string;
+    version: string;
+    files: Array<{
+        name?: string;
+        content: string;
+    }>;
+    stdin?: string;
+    args?: string[];
+    compile_timeout?: number;
+    run_timeout?: number;
+}
+
+export interface ExecuteResult {
+    language: string;
+    version: string;
+    run: {
+        stdout: string;
+        stderr: string;
+        output: string;
+        code: number;
+        signal: string | null;
+    };
+    compile?: {
+        stdout: string;
+        stderr: string;
+        output: string;
+        code: number;
+    };
+}
+
+export interface Runtime {
+    language: string;
+    version: string;
+    aliases: string[];
+}
+
 export const ITEMS_PER_PAGE = 20;
 export const MAX_CODE_LENGTH = 50000;
 export const MAX_SUBMISSION_ATTEMPTS = 100;

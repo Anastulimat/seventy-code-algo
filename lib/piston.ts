@@ -1,40 +1,4 @@
-// lib/piston.ts
-interface ExecuteOptions {
-    language: string;
-    version: string;
-    files: Array<{
-        name?: string;
-        content: string;
-    }>;
-    stdin?: string;
-    args?: string[];
-    compile_timeout?: number;
-    run_timeout?: number;
-}
-
-interface ExecuteResult {
-    language: string;
-    version: string;
-    run: {
-        stdout: string;
-        stderr: string;
-        output: string;
-        code: number;
-        signal: string | null;
-    };
-    compile?: {
-        stdout: string;
-        stderr: string;
-        output: string;
-        code: number;
-    };
-}
-
-interface Runtime {
-    language: string;
-    version: string;
-    aliases: string[];
-}
+import {ExecuteOptions, ExecuteResult, Runtime} from "@/types";
 
 const PISTON_API_URL = 'https://emkc.org/api/v2/piston';
 
